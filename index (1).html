@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>라이드온 로드바이크 클럽</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚴</text></svg>" />
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" />
+<style>
+  :root{
+    --sky-bg:#EAF6FD;
+    --sky-bg-deep:#CFEBFA;
+    --sky-primary:#2F8FCB;
+    --sky-primary-dark:#1F6E9E;
+    --navy:#123A55;
+    --sunset:#FFB347;
+    --sunset-dark:#E0912A;
+    --gray:#5B6B7A;
+    --line:#CFE7F5;
+    --white:#FFFFFF;
+    --danger:#D9534F;
+    --radius:14px;
+    --radius-sm:8px;
+    --shadow: 0 6px 20px rgba(18,58,85,0.08);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
+    background:var(--sky-bg);
+    color:var(--navy);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px;}
+
+  /* ---------- Header ---------- */
+  header.site-header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(234,246,253,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    max-width:1040px;margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:19px;color:var(--navy);}
+  .logo .emoji{font-size:24px;}
+  nav.main-nav{display:flex;gap:4px;flex-wrap:wrap;}
+  nav.main-nav button{
+    background:none;border:none;padding:9px 14px;border-radius:999px;
+    font-size:14.5px;font-weight:600;color:var(--gray);
+    transition:background .15s, color .15s;
+  }
+  nav.main-nav button:hover{background:var(--sky-bg-deep);color:var(--sky-primary-dark);}
+  nav.main-nav button.active{background:var(--sky-primary);color:#fff;}
+  .nav-toggle{display:none;background:none;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:18px;}
+
+  @media (max-width:760px){
+    .nav-toggle{display:block;}
+    nav.main-nav{
+      display:none;position:absolute;top:100%;left:0;right:0;
+      background:var(--white);border-bottom:1px solid var(--line);
+      flex-direction:column;padding:8px;box-shadow:var(--shadow);
+    }
+    nav.main-nav.open{display:flex;}
+    nav.main-nav button{text-align:left;border-radius:8px;}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;overflow:hidden;
+    background:linear-gradient(180deg,#BFE3F7 0%, var(--sky-bg) 78%);
+    padding:64px 24px 96px;
+    text-align:left;
+  }
+  .cloud{position:absolute;opacity:.9;}
+  .hero-copy{position:relative;z-index:2;max-width:640px;margin:0 auto;}
+  .hero .eyebrow-emoji{font-size:15px;color:var(--sky-primary-dark);font-weight:700;margin-bottom:10px;}
+  .hero h1{
+    font-size:44px;line-height:1.25;margin:0 0 18px;font-weight:800;color:var(--navy);
+    letter-spacing:-0.5px;
+  }
+  .hero p{font-size:16.5px;color:var(--gray);max-width:520px;margin:0 0 28px;}
+  .hero-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:12px 22px;border-radius:999px;border:none;font-weight:700;font-size:15px;
+    transition:transform .12s, box-shadow .12s;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--sky-primary);color:#fff;box-shadow:0 8px 18px rgba(47,143,203,0.35);}
+  .btn-primary:hover{background:var(--sky-primary-dark);}
+  .btn-sunset{background:var(--sunset);color:#4a2c00;box-shadow:0 8px 18px rgba(255,179,71,0.4);}
+  .btn-sunset:hover{background:var(--sunset-dark);}
+  .btn-ghost{background:#fff;color:var(--sky-primary-dark);border:1.5px solid var(--sky-primary);}
+  .btn-ghost:hover{background:var(--sky-bg-deep);}
+  .btn-outline-sm{background:#fff;color:var(--gray);border:1px solid var(--line);padding:7px 14px;border-radius:8px;font-size:13.5px;font-weight:600;}
+  .btn-outline-sm:hover{border-color:var(--sky-primary);color:var(--sky-primary-dark);}
+  .btn-danger-sm{background:#fff;color:var(--danger);border:1px solid #f1c3c1;padding:7px 14px;border-radius:8px;font-size:13.5px;font-weight:600;}
+  .btn-danger-sm:hover{background:#fdf1f1;}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+
+  .bike-trail{position:absolute;bottom:26px;left:-60px;font-size:30px;animation:ride 7s linear 0.3s 1;transform:scaleX(-1);}
+  @keyframes ride{
+    0%{left:-60px;transform:scaleX(-1) translateY(0);}
+    48%{transform:scaleX(-1) translateY(-6px);}
+    50%{transform:scaleX(-1) translateY(-6px);}
+    100%{left:104%;transform:scaleX(-1) translateY(0);}
+  }
+  .road-line{position:absolute;bottom:20px;left:0;right:0;height:2px;background:repeating-linear-gradient(90deg,var(--sky-primary) 0 24px, transparent 24px 42px);opacity:.5;}
+
+  @media(max-width:640px){ .hero h1{font-size:32px;} }
+
+  /* ---------- Section shell ---------- */
+  main{min-height:60vh;}
+  .section{padding:52px 24px 80px;}
+  .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap;}
+  .section-head h2{font-size:26px;margin:0 0 6px;font-weight:800;color:var(--navy);}
+  .section-head .desc{color:var(--gray);font-size:14.5px;margin:0;}
+
+  /* ---------- Cards / lists ---------- */
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 22px;margin-bottom:12px;box-shadow:var(--shadow);
+  }
+  .board-row{
+    display:flex;align-items:center;gap:14px;padding:15px 20px;
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);
+    margin-bottom:8px;cursor:pointer;transition:border-color .12s, transform .12s;
+  }
+  .board-row:hover{border-color:var(--sky-primary);transform:translateX(2px);}
+  .board-row .pin{color:var(--sunset-dark);font-weight:800;font-size:12px;background:#fff4e2;padding:3px 8px;border-radius:6px;}
+  .board-row .title{flex:1;font-weight:700;font-size:15.5px;color:var(--navy);}
+  .board-row .meta{font-size:12.5px;color:var(--gray);white-space:nowrap;}
+  .empty{text-align:center;color:var(--gray);padding:50px 10px;font-size:14.5px;}
+  .empty .emoji{font-size:34px;display:block;margin-bottom:10px;}
+
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media(max-width:820px){.grid-3{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.grid-3{grid-template-columns:1fr;}}
+
+  .gallery-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;}
+  .gallery-card .thumb{width:100%;aspect-ratio:4/3;object-fit:cover;background:linear-gradient(135deg,var(--sky-bg-deep),var(--sky-bg));}
+  .gallery-card .thumb.fallback{display:flex;align-items:center;justify-content:center;font-size:44px;}
+  .gallery-card .cap{padding:12px 14px;}
+  .gallery-card .cap .t{font-weight:700;font-size:14.5px;margin-bottom:2px;}
+  .gallery-card .cap .m{font-size:12px;color:var(--gray);}
+
+  .event-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:14px;box-shadow:var(--shadow);}
+  .event-card .badge{display:inline-block;background:var(--sky-bg-deep);color:var(--sky-primary-dark);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:10px;}
+  .event-card h3{margin:0 0 8px;font-size:19px;color:var(--navy);}
+  .event-card .info-row{display:flex;flex-wrap:wrap;gap:14px;color:var(--gray);font-size:13.5px;margin-bottom:10px;}
+  .event-card .info-row span{display:inline-flex;align-items:center;gap:4px;}
+  .event-card p.desc-text{color:var(--navy);font-size:14.5px;margin:0 0 14px;}
+  .event-card .row-actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+  /* ---------- Forms ---------- */
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+  .field input, .field textarea, .field select{
+    width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:var(--radius-sm);
+    font-family:inherit;font-size:14.5px;color:var(--navy);background:#fbfeff;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus{outline:none;border-color:var(--sky-primary);background:#fff;}
+  .field textarea{min-height:120px;resize:vertical;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:560px){.field-row{grid-template-columns:1fr;}}
+  .hint{font-size:12px;color:var(--gray);margin-top:4px;}
+
+  /* ---------- Modal ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(18,58,85,0.45);
+    display:none;align-items:center;justify-content:center;padding:20px;z-index:100;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:#fff;border-radius:16px;padding:26px 26px 22px;max-width:480px;width:100%;
+    max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(18,58,85,0.3);
+  }
+  .modal h3{margin:0 0 4px;font-size:19px;color:var(--navy);}
+  .modal .sub{color:var(--gray);font-size:13px;margin:0 0 18px;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;}
+  .modal-close{position:absolute;}
+
+  /* ---------- Detail view ---------- */
+  .detail-head{margin-bottom:18px;}
+  .detail-head h2{font-size:23px;margin:0 0 8px;color:var(--navy);}
+  .detail-meta{font-size:13px;color:var(--gray);display:flex;gap:12px;flex-wrap:wrap;}
+  .detail-body{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px;white-space:pre-wrap;font-size:15px;color:var(--navy);margin:16px 0;min-height:80px;}
+  .back-link{display:inline-flex;align-items:center;gap:6px;color:var(--sky-primary-dark);font-weight:700;font-size:14px;margin-bottom:18px;}
+  .back-link:hover{text-decoration:underline;}
+
+  /* ---------- About page ---------- */
+  .about-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:10px;}
+  @media(max-width:760px){.about-grid{grid-template-columns:1fr;}}
+  .about-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);}
+  .about-card .emoji{font-size:30px;margin-bottom:10px;}
+  .about-card h4{margin:0 0 6px;font-size:16px;color:var(--navy);}
+  .about-card p{margin:0;font-size:13.5px;color:var(--gray);}
+  .stat-strip{display:flex;gap:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff;margin-top:32px;box-shadow:var(--shadow);}
+  .stat{flex:1;text-align:center;padding:22px 10px;border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .num{font-size:26px;font-weight:800;color:var(--sky-primary-dark);}
+  .stat .lab{font-size:12.5px;color:var(--gray);margin-top:4px;}
+
+  /* ---------- Toast ---------- */
+  #toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);
+    background:var(--navy);color:#fff;padding:12px 20px;border-radius:999px;font-size:14px;font-weight:600;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;z-index:200;
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--navy);color:#cfe4f2;padding:36px 24px;margin-top:40px;}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;align-items:center;}
+  footer .f-logo{font-weight:800;color:#fff;font-size:15px;}
+  footer small{color:#8fb2c8;font-size:12.5px;}
+
+  .loading{text-align:center;padding:40px;color:var(--gray);font-size:14px;}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo"><span class="emoji">🚴</span>라이드온 로드바이크 클럽</div>
+    <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기">☰</button>
+    <nav class="main-nav" id="mainNav">
+      <button data-page="home">홈</button>
+      <button data-page="about">동호회 소개</button>
+      <button data-page="meetings">정기모임</button>
+      <button data-page="gatherings">소모임</button>
+      <button data-page="gallery">갤러리</button>
+      <button data-page="notices">공지사항</button>
+      <button data-page="free">자유게시판</button>
+    </nav>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-logo">🚴 라이드온 로드바이크 클럽</div>
+    <small>본 사이트는 강의용 샘플 사이트입니다 · Supabase 연동 CRUD 데모</small>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalBox"></div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+/* =========================================================
+   설정
+========================================================= */
+const SUPABASE_URL = 'https://qruixeqrkylkducshqun.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_oZBk2AQHf8XfCTd0v3OV6A_2ZCo6otb';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* =========================================================
+   공통 유틸
+========================================================= */
+const app = document.getElementById('app');
+const $ = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+function escapeHtml(str){
+  if(str===null || str===undefined) return '';
+  return String(str)
+    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+    .replaceAll('"','&quot;').replaceAll("'",'&#39;');
+}
+function nl2br(str){ return escapeHtml(str).replaceAll('\n','<br>'); }
+function fmtDate(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+function fmtDateOnly(dateStr){
+  if(!dateStr) return '';
+  const [y,m,d] = dateStr.split('-');
+  return `${y}.${m}.${d}`;
+}
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ---- Modal helper ---- */
+const overlay = document.getElementById('modalOverlay');
+const modalBox = document.getElementById('modalBox');
+function openModal(html){
+  modalBox.innerHTML = html;
+  overlay.classList.add('open');
+}
+function closeModal(){
+  overlay.classList.remove('open');
+  modalBox.innerHTML = '';
+}
+overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeModal(); });
+
+function promptPassword({title='비밀번호 확인', sub='작성 시 입력한 비밀번호를 입력해주세요.'}={}){
+  return new Promise((resolve)=>{
+    openModal(`
+      <h3>${escapeHtml(title)}</h3>
+      <p class="sub">${escapeHtml(sub)}</p>
+      <div class="field"><input type="password" id="pwInput" placeholder="비밀번호" autofocus /></div>
+      <div class="modal-actions">
+        <button class="btn-outline-sm" id="pwCancel">취소</button>
+        <button class="btn btn-primary" id="pwOk" style="padding:9px 18px;">확인</button>
+      </div>
+    `);
+    $('#pwCancel').onclick = ()=>{ closeModal(); resolve(null); };
+    $('#pwOk').onclick = ()=>{ const v = $('#pwInput').value; closeModal(); resolve(v); };
+    $('#pwInput').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ const v=$('#pwInput').value; closeModal(); resolve(v);} });
+  });
+}
+function confirmDialog(msg){
+  return new Promise((resolve)=>{
+    openModal(`
+      <h3>확인</h3>
+      <p class="sub">${escapeHtml(msg)}</p>
+      <div class="modal-actions">
+        <button class="btn-outline-sm" id="cfCancel">취소</button>
+        <button class="btn btn-primary" id="cfOk" style="padding:9px 18px;background:var(--danger);">삭제</button>
+      </div>
+    `);
+    $('#cfCancel').onclick = ()=>{ closeModal(); resolve(false); };
+    $('#cfOk').onclick = ()=>{ closeModal(); resolve(true); };
+  });
+}
+
+/* =========================================================
+   라우터
+========================================================= */
+const routes = {}; // name -> render function (params) => Promise<void>
+function setActiveNav(page){
+  $$('#mainNav button').forEach(b=> b.classList.toggle('active', b.dataset.page === page));
+}
+async function navigate(){
+  const hash = location.hash.replace('#','') || 'home';
+  const [page, ...rest] = hash.split('/');
+  const param = rest.join('/');
+  setActiveNav(page);
+  document.getElementById('mainNav').classList.remove('open');
+  const fn = routes[page] || routes['home'];
+  app.innerHTML = '<div class="loading">불러오는 중...</div>';
+  window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
+  try{
+    await fn(param);
+  }catch(err){
+    console.error(err);
+    app.innerHTML = `<div class="section"><div class="empty"><span class="emoji">⚠️</span>페이지를 불러오는 중 오류가 발생했습니다.<br><small>${escapeHtml(err.message||err)}</small></div></div>`;
+  }
+}
+window.addEventListener('hashchange', navigate);
+document.getElementById('mainNav').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-page]');
+  if(btn) location.hash = btn.dataset.page;
+});
+document.getElementById('navToggle').addEventListener('click', ()=>{
+  document.getElementById('mainNav').classList.toggle('open');
+});
+
+/* =========================================================
+   HOME
+========================================================= */
+routes.home = async function(){
+  app.innerHTML = `
+    <section class="hero">
+      <div class="road-line"></div>
+      <div class="bike-trail">🚴‍♂️💨</div>
+      <svg class="cloud" style="top:20px; left:6%; width:110px;" viewBox="0 0 200 100"><ellipse cx="60" cy="60" rx="55" ry="30" fill="#fff"/><ellipse cx="110" cy="45" rx="45" ry="35" fill="#fff"/><ellipse cx="150" cy="65" rx="40" ry="25" fill="#fff"/></svg>
+      <svg class="cloud" style="top:70px; right:8%; width:90px;" viewBox="0 0 200 100"><ellipse cx="60" cy="60" rx="55" ry="30" fill="#fff"/><ellipse cx="110" cy="45" rx="45" ry="35" fill="#fff"/></svg>
+      <svg class="cloud" style="top:10px; right:28%; width:60px; opacity:.7;" viewBox="0 0 200 100"><ellipse cx="80" cy="55" rx="60" ry="32" fill="#fff"/></svg>
+      <div class="hero-copy">
+        <div class="eyebrow-emoji">🌤️ 서울·경기 로드 자전거 동호회</div>
+        <h1>바퀴 두 개, 하늘 아래<br>함께 달리는 사람들</h1>
+        <p>연 4회 정기모임과 매달 지역별 소모임으로, 전국의 아름다운 길을 함께 달립니다. 초보부터 고수까지 누구나 환영합니다.</p>
+        <div class="hero-actions">
+          <a href="#meetings" class="btn btn-primary">🚵 정기모임 보기</a>
+          <a href="#gatherings" class="btn btn-sunset">📍 소모임 신청하기</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:44px;">
+      <div class="about-grid">
+        <div class="about-card"><div class="emoji">🚴</div><h4>연 4회 정기모임</h4><p>분기마다 전 회원이 함께하는 정기 라이딩. 코스 안내와 안전 교육이 함께 진행됩니다.</p></div>
+        <div class="about-card"><div class="emoji">🗺️</div><h4>매달 지역 소모임</h4><p>제주부터 강원까지, 회원이 직접 여는 지역별 소규모 자전거 여행에 자유롭게 신청하세요.</p></div>
+        <div class="about-card"><div class="emoji">📷</div><h4>라이딩 갤러리</h4><p>함께 달린 순간들을 사진으로 공유하고 다음 라이딩을 기대해보세요.</p></div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0;">
+      <div class="section-head">
+        <div><h2>📌 최근 공지</h2><p class="desc">동호회의 새로운 소식을 확인하세요</p></div>
+        <a href="#notices" class="btn-outline-sm">전체보기</a>
+      </div>
+      <div id="homeNoticeList"><div class="loading">불러오는 중...</div></div>
+    </section>
+  `;
+  const { data, error } = await supabase
+    .from('rbc_notices')
+    .select('id,title,created_at,is_pinned')
+    .order('is_pinned', {ascending:false})
+    .order('created_at', {ascending:false})
+    .limit(4);
+  const box = document.getElementById('homeNoticeList');
+  if(error){ box.innerHTML = `<div class="empty">공지사항을 불러올 수 없습니다.</div>`; return; }
+  if(!data.length){ box.innerHTML = `<div class="empty"><span class="emoji">📭</span>등록된 공지가 없습니다.</div>`; return; }
+  box.innerHTML = data.map(n=>`
+    <a class="board-row" href="#notices/${n.id}">
+      ${n.is_pinned ? '<span class="pin">고정</span>' : ''}
+      <span class="title">${escapeHtml(n.title)}</span>
+      <span class="meta">${fmtDate(n.created_at)}</span>
+    </a>`).join('');
+};
+
+/* =========================================================
+   ABOUT
+========================================================= */
+routes.about = async function(){
+  app.innerHTML = `
+    <section class="section">
+      <div class="section-head"><div><h2>🚴 동호회 소개</h2><p class="desc">라이드온 로드바이크 클럽을 소개합니다</p></div></div>
+      <div class="card">
+        <p style="margin:0 0 10px;">라이드온은 하늘이 맑은 날 함께 페달을 밟는 즐거움을 나누는 로드 자전거 동호회입니다. 2019년 소규모 모임으로 시작해 지금은 전국 각지에서 활동하는 회원들이 함께하고 있습니다.</p>
+        <p style="margin:0;">실력이나 경력에 관계없이 자전거를 사랑하는 분이라면 누구나 환영합니다. 정기모임에서는 안전 라이딩 교육과 함께 즐거운 페이스라인을, 소모임에서는 지역 곳곳의 숨은 코스를 함께 탐험합니다.</p>
+      </div>
+
+      <div class="stat-strip">
+        <div class="stat"><div class="num">320+</div><div class="lab">활동 회원</div></div>
+        <div class="stat"><div class="num">4회</div><div class="lab">연간 정기모임</div></div>
+        <div class="stat"><div class="num">매달</div><div class="lab">지역별 소모임</div></div>
+        <div class="stat"><div class="num">2019</div><div class="lab">창립 연도</div></div>
+      </div>
+
+      <div class="section-head" style="margin-top:44px;"><div><h2>🧭 운영 원칙</h2></div></div>
+      <div class="about-grid">
+        <div class="about-card"><div class="emoji">🦺</div><h4>안전 최우선</h4><p>헬멧 착용, 신호 준수, 페이스라인 유지를 원칙으로 합니다.</p></div>
+        <div class="about-card"><div class="emoji">🤝</div><h4>느린 사람과 함께</h4><p>가장 느린 회원의 속도에 맞춰 함께 달리는 것을 원칙으로 합니다.</p></div>
+        <div class="about-card"><div class="emoji">🌱</div><h4>누구나 환영</h4><p>입문자도 부담 없이 참여할 수 있는 코스와 분위기를 만듭니다.</p></div>
+      </div>
+    </section>
+  `;
+};
+
+/* =========================================================
+   재사용 가능한 "게시판" CRUD 모듈
+   (공지사항 / 자유게시판 / 갤러리에서 공통 로직 재사용)
+========================================================= */
+function createSimpleBoard({
+  table, pageName, label, hasPinned=false, hasViews=false, hasImage=false,
+  defaultAuthor=null, listSelectCols
+}){
+  async function list(){
+    let q = supabase.from(table).select(listSelectCols).order('created_at',{ascending:false});
+    if(hasPinned) q = supabase.from(table).select(listSelectCols).order('is_pinned',{ascending:false}).order('created_at',{ascending:false});
+    const { data, error } = await q;
+
+    let listHtml;
+    if(error){
+      listHtml = `<div class="empty"><span class="emoji">⚠️</span>목록을 불러오지 못했습니다.</div>`;
+    } else if(!data.length){
+      listHtml = `<div class="empty"><span class="emoji">📭</span>등록된 글이 없습니다. 첫 글을 남겨보세요!</div>`;
+    } else if(hasImage){
+      listHtml = `<div class="grid-3">` + data.map(row=>`
+        <div class="gallery-card" onclick="location.hash='${pageName}/${row.id}'">
+          ${row.image_url
+            ? `<img class="thumb" src="${escapeHtml(row.image_url)}" alt="${escapeHtml(row.title)}" onerror="this.outerHTML='<div class=&quot;thumb fallback&quot;>🚴</div>'" />`
+            : `<div class="thumb fallback">🚴</div>`}
+          <div class="cap">
+            <div class="t">${escapeHtml(row.title)}</div>
+            <div class="m">${escapeHtml(row.author_name)} · ${fmtDate(row.created_at)}</div>
+          </div>
+        </div>`).join('') + `</div>`;
+    } else {
+      listHtml = data.map(row=>`
+        <a class="board-row" href="#${pageName}/${row.id}">
+          ${hasPinned && row.is_pinned ? '<span class="pin">고정</span>' : ''}
+          <span class="title">${escapeHtml(row.title)}</span>
+          <span class="meta">${escapeHtml(row.author_name)} · ${fmtDate(row.created_at)}${hasViews ? ' · 조회 '+row.views : ''}</span>
+        </a>`).join('');
+    }
+
+    app.innerHTML = `
+      <section class="section">
+        <div class="section-head">
+          <div><h2>${label.icon} ${label.title}</h2><p class="desc">${label.desc}</p></div>
+          <button class="btn btn-primary" id="writeBtn" style="padding:10px 18px;">✏️ 글쓰기</button>
+        </div>
+        <div id="listBox">${listHtml}</div>
+      </section>
+    `;
+    $('#writeBtn').onclick = ()=> openWriteModal();
+  }
+
+  function openWriteModal(existing=null){
+    const isEdit = !!existing;
+    openModal(`
+      <h3>${isEdit ? '글 수정' : label.title + ' 작성'}</h3>
+      <p class="sub">${isEdit ? '비밀번호로 확인된 글을 수정합니다.' : '아래 정보를 입력해 새 글을 등록하세요.'}</p>
+      <div class="field"><label>제목</label><input id="fTitle" value="${isEdit ? escapeHtml(existing.title) : ''}" placeholder="제목을 입력하세요" /></div>
+      ${hasImage ? `<div class="field"><label>이미지 URL</label><input id="fImage" value="${isEdit ? escapeHtml(existing.image_url||'') : ''}" placeholder="https://..." /><div class="hint">이미지 URL이 없으면 기본 아이콘으로 표시됩니다.</div></div>` : ''}
+      <div class="field"><label>내용</label><textarea id="fContent" placeholder="내용을 입력하세요">${isEdit ? escapeHtml(existing.content||'') : ''}</textarea></div>
+      <div class="field-row">
+        <div class="field"><label>작성자${defaultAuthor ? ' (기본값 사용 가능)' : ''}</label><input id="fAuthor" value="${isEdit ? escapeHtml(existing.author_name) : (defaultAuthor||'')}" placeholder="이름" ${isEdit?'disabled':''} /></div>
+        <div class="field"><label>비밀번호</label><input id="fPw" type="password" placeholder="${isEdit? '기존 비밀번호 그대로 유지됨' : '수정/삭제 시 사용'}" ${isEdit?'disabled':''} /></div>
+      </div>
+      ${hasPinned ? `<div class="field"><label><input type="checkbox" id="fPinned" style="width:auto;margin-right:6px;" ${isEdit && existing.is_pinned?'checked':''}/> 상단 고정</label></div>` : ''}
+      <div class="modal-actions">
+        <button class="btn-outline-sm" id="wCancel">취소</button>
+        <button class="btn btn-primary" id="wSubmit" style="padding:9px 18px;">${isEdit?'수정 완료':'등록하기'}</button>
+      </div>
+    `);
+    $('#wCancel').onclick = closeModal;
+    $('#wSubmit').onclick = async ()=>{
+      const title = $('#fTitle').value.trim();
+      const content = $('#fContent').value.trim();
+      const author = isEdit ? existing.author_name : $('#fAuthor').value.trim();
+      const pw = isEdit ? existing.password : $('#fPw').value;
+      const image_url = hasImage ? $('#fImage').value.trim() : undefined;
+      const is_pinned = hasPinned ? $('#fPinned').checked : undefined;
+      if(!title || !content || (!isEdit && (!author || !pw))){
+        toast('필수 항목을 모두 입력해주세요.'); return;
+      }
+      $('#wSubmit').disabled = true;
+      if(isEdit){
+        const payload = { title, content, updated_at: new Date().toISOString() };
+        if(hasImage) payload.image_url = image_url;
+        if(hasPinned) payload.is_pinned = is_pinned;
+        const { error } = await supabase.from(table).update(payload).eq('id', existing.id);
+        if(error){ toast('수정에 실패했습니다.'); $('#wSubmit').disabled=false; return; }
+        toast('수정되었습니다.');
+      } else {
+        const payload = { title, content, author_name: author, password: pw };
+        if(hasImage) payload.image_url = image_url;
+        if(hasPinned) payload.is_pinned = is_pinned;
+        if(hasViews) payload.views = 0;
+        const { error } = await supabase.from(table).insert(payload);
+        if(error){ toast('등록에 실패했습니다.'); $('#wSubmit').disabled=false; return; }
+        toast('등록되었습니다.');
+      }
+      closeModal();
+      if(isEdit) location.hash = `${pageName}/${existing.id}`; else navigate();
+    };
+  }
+
+  async function detail(id){
+    const { data: row, error } = await supabase.from(table).select('*').eq('id', id).single();
+    if(error || !row){
+      app.innerHTML = `<section class="section"><a class="back-link" href="#${pageName}">← 목록으로</a><div class="empty"><span class="emoji">🔍</span>글을 찾을 수 없습니다.</div></section>`;
+      return;
+    }
+    if(hasViews){
+      supabase.from(table).update({ views: (row.views||0)+1 }).eq('id', id).then(()=>{});
+    }
+    app.innerHTML = `
+      <section class="section">
+        <a class="back-link" href="#${pageName}">← 목록으로</a>
+        <div class="detail-head">
+          <h2>${hasPinned && row.is_pinned ? '<span class="pin" style="margin-right:8px;">고정</span>' : ''}${escapeHtml(row.title)}</h2>
+          <div class="detail-meta">
+            <span>✍️ ${escapeHtml(row.author_name)}</span>
+            <span>🗓️ ${fmtDate(row.created_at)}</span>
+            ${hasViews ? `<span>👁️ 조회 ${row.views||0}</span>` : ''}
+          </div>
+        </div>
+        ${hasImage && row.image_url ? `<img src="${escapeHtml(row.image_url)}" style="width:100%;border-radius:14px;margin-bottom:16px;border:1px solid var(--line);" onerror="this.style.display='none'" />` : ''}
+        <div class="detail-body">${nl2br(row.content) || '<span style="color:var(--gray)">내용이 없습니다.</span>'}</div>
+        <div class="row-actions" style="display:flex;gap:8px;">
+          <button class="btn-outline-sm" id="editBtn">✏️ 수정</button>
+          <button class="btn-danger-sm" id="delBtn">🗑️ 삭제</button>
+        </div>
+      </section>
+    `;
+    $('#editBtn').onclick = async ()=>{
+      const pw = await promptPassword();
+      if(pw === null) return;
+      if(pw !== row.password){ toast('비밀번호가 일치하지 않습니다.'); return; }
+      openWriteModal(row);
+    };
+    $('#delBtn').onclick = async ()=>{
+      const pw = await promptPassword({title:'삭제 확인', sub:'삭제하려면 비밀번호를 입력해주세요.'});
+      if(pw === null) return;
+      if(pw !== row.password){ toast('비밀번호가 일치하지 않습니다.'); return; }
+      const ok = await confirmDialog('정말 이 글을 삭제하시겠습니까? 되돌릴 수 없습니다.');
+      if(!ok) return;
+      const { error } = await supabase.from(table).delete().eq('id', id);
+      if(error){ toast('삭제에 실패했습니다.'); return; }
+      toast('삭제되었습니다.');
+      location.hash = pageName;
+    };
+  }
+
+  routes[pageName] = async (param)=>{
+    if(param) await detail(param); else await list();
+  };
+}
+
+createSimpleBoard({
+  table:'rbc_notices', pageName:'notices',
+  label:{icon:'📢', title:'공지사항', desc:'동호회의 중요한 소식을 안내합니다'},
+  hasPinned:true, hasViews:true, defaultAuthor:'운영진',
+  listSelectCols:'id,title,author_name,created_at,is_pinned,views'
+});
+createSimpleBoard({
+  table:'rbc_free_posts', pageName:'free',
+  label:{icon:'💬', title:'자유게시판', desc:'라이딩 후기, 궁금한 점을 자유롭게 나눠보세요'},
+  hasViews:true,
+  listSelectCols:'id,title,author_name,created_at,views'
+});
+createSimpleBoard({
+  table:'rbc_gallery', pageName:'gallery',
+  label:{icon:'📷', title:'갤러리', desc:'함께 달린 순간을 사진으로 남겨보세요'},
+  hasImage:true,
+  listSelectCols:'id,title,image_url,author_name,created_at'
+});
+
+/* =========================================================
+   이벤트(정기모임 / 소모임) 공통 모듈
+========================================================= */
+function createEventBoard({
+  table, regTable, fk, pageName, label, dateLabel, allowMemberCreate
+}){
+  async function list(){
+    const { data, error } = await supabase.from(table).select('*').order(dateLabel==='meeting_date'?'meeting_date':'gathering_date',{ascending:true});
+    let html;
+    if(error){
+      html = `<div class="empty"><span class="emoji">⚠️</span>목록을 불러오지 못했습니다.</div>`;
+    } else if(!data.length){
+      html = `<div class="empty"><span class="emoji">🗓️</span>등록된 일정이 없습니다.</div>`;
+    } else {
+      html = data.map(row=>`
+        <div class="event-card">
+          <span class="badge">📍 ${escapeHtml(row.region)}</span>
+          <h3><a href="#${pageName}/${row.id}">${escapeHtml(row.title)}</a></h3>
+          <div class="info-row">
+            <span>🗓️ ${fmtDateOnly(row[dateLabel])}</span>
+            ${row.location ? `<span>📌 ${escapeHtml(row.location)}</span>` : ''}
+            <span>👥 정원 ${row.capacity}명</span>
+            <span>✍️ ${escapeHtml(row.host_name || row.author_name)}</span>
+          </div>
+          <p class="desc-text">${escapeHtml((row.content||'').slice(0,80))}${(row.content||'').length>80?'...':''}</p>
+          <div class="row-actions">
+            <a class="btn btn-sunset" style="padding:9px 16px;font-size:13.5px;" href="#${pageName}/${row.id}">자세히 보기 / 신청</a>
+          </div>
+        </div>
+      `).join('');
+    }
+    app.innerHTML = `
+      <section class="section">
+        <div class="section-head">
+          <div><h2>${label.icon} ${label.title}</h2><p class="desc">${label.desc}</p></div>
+          ${allowMemberCreate ? `<button class="btn btn-primary" id="newBtn" style="padding:10px 18px;">➕ 일정 등록</button>` : `<button class="btn btn-primary" id="newBtn" style="padding:10px 18px;">➕ 정기모임 등록</button>`}
+        </div>
+        <div>${html}</div>
+      </section>
+    `;
+    $('#newBtn').onclick = ()=> openEventFormModal();
+  }
+
+  function openEventFormModal(existing=null){
+    const isEdit = !!existing;
+    openModal(`
+      <h3>${isEdit? '일정 수정' : label.title + ' 등록'}</h3>
+      <p class="sub">${isEdit? '비밀번호 확인 후 수정합니다.' : '새로운 ' + label.title + ' 일정을 등록하세요.'}</p>
+      <div class="field"><label>제목</label><input id="eTitle" value="${isEdit?escapeHtml(existing.title):''}" placeholder="예) 북한강 자전거길 라이딩" /></div>
+      <div class="field-row">
+        <div class="field"><label>지역</label><input id="eRegion" value="${isEdit?escapeHtml(existing.region):''}" placeholder="예) 경기 가평" /></div>
+        <div class="field"><label>날짜</label><input id="eDate" type="date" value="${isEdit?existing[dateLabel]:''}" /></div>
+      </div>
+      <div class="field-row">
+        ${dateLabel==='meeting_date' ? `<div class="field"><label>장소</label><input id="eLocation" value="${isEdit?escapeHtml(existing.location||''):''}" placeholder="집결 장소" /></div>` : `<div class="field"><label>모임장</label><input id="eHost" value="${isEdit?escapeHtml(existing.host_name):''}" placeholder="이름" ${isEdit?'disabled':''} /></div>`}
+        <div class="field"><label>정원</label><input id="eCapacity" type="number" min="1" value="${isEdit?existing.capacity:'10'}" /></div>
+      </div>
+      <div class="field"><label>소개</label><textarea id="eContent" placeholder="코스, 난이도, 준비물 등을 안내해주세요">${isEdit?escapeHtml(existing.content||''):''}</textarea></div>
+      ${dateLabel==='meeting_date' ? `<div class="field"><label>작성자</label><input id="eAuthor" value="${isEdit?escapeHtml(existing.author_name):'운영진'}" ${isEdit?'disabled':''} /></div>` : ''}
+      <div class="field"><label>비밀번호</label><input id="ePw" type="password" placeholder="${isEdit?'기존 비밀번호 유지':'수정/삭제 시 사용'}" ${isEdit?'disabled':''} /></div>
+      <div class="modal-actions">
+        <button class="btn-outline-sm" id="eCancel">취소</button>
+        <button class="btn btn-primary" id="eSubmit" style="padding:9px 18px;">${isEdit?'수정 완료':'등록하기'}</button>
+      </div>
+    `);
+    $('#eCancel').onclick = closeModal;
+    $('#eSubmit').onclick = async ()=>{
+      const title = $('#eTitle').value.trim();
+      const region = $('#eRegion').value.trim();
+      const dateVal = $('#eDate').value;
+      const capacity = parseInt($('#eCapacity').value || '0', 10);
+      const content = $('#eContent').value.trim();
+      if(!title || !region || !dateVal || !capacity){ toast('필수 항목을 입력해주세요.'); return; }
+      $('#eSubmit').disabled = true;
+      if(isEdit){
+        const payload = { title, region, [dateLabel]: dateVal, capacity, content, updated_at: new Date().toISOString() };
+        if(dateLabel==='meeting_date') payload.location = $('#eLocation').value.trim();
+        const { error } = await supabase.from(table).update(payload).eq('id', existing.id);
+        if(error){ toast('수정에 실패했습니다.'); $('#eSubmit').disabled=false; return; }
+        toast('수정되었습니다.');
+      } else {
+        const pw = $('#ePw').value;
+        if(!pw){ toast('비밀번호를 입력해주세요.'); $('#eSubmit').disabled=false; return; }
+        const payload = { title, region, [dateLabel]: dateVal, capacity, content, password: pw };
+        if(dateLabel==='meeting_date'){
+          payload.location = $('#eLocation').value.trim();
+          payload.author_name = $('#eAuthor').value.trim() || '운영진';
+        } else {
+          const host = $('#eHost').value.trim();
+          if(!host){ toast('모임장 이름을 입력해주세요.'); $('#eSubmit').disabled=false; return; }
+          payload.host_name = host;
+        }
+        const { error } = await supabase.from(table).insert(payload);
+        if(error){ toast('등록에 실패했습니다.'); $('#eSubmit').disabled=false; return; }
+        toast('등록되었습니다.');
+      }
+      closeModal();
+      if(isEdit) location.hash = `${pageName}/${existing.id}`; else navigate();
+    };
+  }
+
+  function openRegisterModal(eventRow){
+    openModal(`
+      <h3>🙋 참가 신청</h3>
+      <p class="sub">"${escapeHtml(eventRow.title)}"에 참가 신청합니다.</p>
+      <div class="field-row">
+        <div class="field"><label>이름</label><input id="rName" placeholder="이름" /></div>
+        <div class="field"><label>연락처</label><input id="rPhone" placeholder="010-0000-0000" /></div>
+      </div>
+      <div class="field"><label>비밀번호</label><input id="rPw" type="password" placeholder="신청 취소 시 필요" /></div>
+      <div class="field"><label>메모 (선택)</label><textarea id="rMemo" placeholder="전달할 내용이 있다면 남겨주세요" style="min-height:70px;"></textarea></div>
+      <div class="modal-actions">
+        <button class="btn-outline-sm" id="rCancel">취소</button>
+        <button class="btn btn-sunset" id="rSubmit" style="padding:9px 18px;">신청하기</button>
+      </div>
+    `);
+    $('#rCancel').onclick = closeModal;
+    $('#rSubmit').onclick = async ()=>{
+      const name = $('#rName').value.trim();
+      const phone = $('#rPhone').value.trim();
+      const pw = $('#rPw').value;
+      const memo = $('#rMemo').value.trim();
+      if(!name || !phone || !pw){ toast('이름, 연락처, 비밀번호는 필수입니다.'); return; }
+      $('#rSubmit').disabled = true;
+      const { error } = await supabase.from(regTable).insert({ [fk]: eventRow.id, name, phone, password: pw, memo });
+      if(error){ toast('신청에 실패했습니다.'); $('#rSubmit').disabled=false; return; }
+      toast('신청이 완료되었습니다! 🚴');
+      closeModal();
+      location.hash = `${pageName}/${eventRow.id}`;
+    };
+  }
+
+  async function detail(id){
+    const { data: row, error } = await supabase.from(table).select('*').eq('id', id).single();
+    if(error || !row){
+      app.innerHTML = `<section class="section"><a class="back-link" href="#${pageName}">← 목록으로</a><div class="empty"><span class="emoji">🔍</span>일정을 찾을 수 없습니다.</div></section>`;
+      return;
+    }
+    const { data: regs } = await supabase.from(regTable).select('*').eq(fk, id).order('created_at',{ascending:true});
+    const regList = regs || [];
+    app.innerHTML = `
+      <section class="section">
+        <a class="back-link" href="#${pageName}">← 목록으로</a>
+        <span class="badge" style="background:var(--sky-bg-deep);color:var(--sky-primary-dark);display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:10px;">📍 ${escapeHtml(row.region)}</span>
+        <h2 style="margin:0 0 10px;font-size:24px;">${escapeHtml(row.title)}</h2>
+        <div class="detail-meta" style="margin-bottom:18px;">
+          <span>🗓️ ${fmtDateOnly(row[dateLabel])}</span>
+          ${row.location ? `<span>📌 ${escapeHtml(row.location)}</span>` : ''}
+          <span>👥 정원 ${row.capacity}명 · 신청 ${regList.length}명</span>
+          <span>✍️ ${escapeHtml(row.host_name || row.author_name)}</span>
+        </div>
+        <div class="detail-body">${nl2br(row.content) || '<span style="color:var(--gray)">소개 내용이 없습니다.</span>'}</div>
+        <div class="row-actions" style="display:flex;gap:8px;margin-bottom:36px;">
+          <button class="btn btn-sunset" id="regBtn" style="padding:10px 18px;">🙋 참가 신청하기</button>
+          <button class="btn-outline-sm" id="editBtn">✏️ 일정 수정</button>
+          <button class="btn-danger-sm" id="delBtn">🗑️ 일정 삭제</button>
+        </div>
+
+        <div class="section-head"><div><h2 style="font-size:18px;">👥 참가 신청 명단 (${regList.length})</h2></div></div>
+        <div id="regListBox">
+          ${regList.length ? regList.map(r=>`
+            <div class="board-row" style="cursor:default;">
+              <span class="title" style="flex:none;min-width:90px;">${escapeHtml(r.name)}</span>
+              <span class="meta" style="flex:1;text-align:left;">${escapeHtml(r.phone)}${r.memo ? ' · '+escapeHtml(r.memo) : ''}</span>
+              <button class="btn-danger-sm" data-regid="${r.id}">신청 취소</button>
+            </div>`).join('') : `<div class="empty" style="padding:24px;"><span class="emoji">🙋</span>아직 신청자가 없습니다. 첫 신청자가 되어보세요!</div>`}
+        </div>
+      </section>
+    `;
+    $('#regBtn').onclick = ()=> openRegisterModal(row);
+    $('#editBtn').onclick = async ()=>{
+      const pw = await promptPassword();
+      if(pw === null) return;
+      if(pw !== row.password){ toast('비밀번호가 일치하지 않습니다.'); return; }
+      openEventFormModal(row);
+    };
+    $('#delBtn').onclick = async ()=>{
+      const pw = await promptPassword({title:'삭제 확인', sub:'일정을 삭제하려면 비밀번호를 입력해주세요.'});
+      if(pw === null) return;
+      if(pw !== row.password){ toast('비밀번호가 일치하지 않습니다.'); return; }
+      const ok = await confirmDialog('정말 이 일정을 삭제하시겠습니까? 신청 내역도 함께 삭제됩니다.');
+      if(!ok) return;
+      const { error } = await supabase.from(table).delete().eq('id', id);
+      if(error){ toast('삭제에 실패했습니다.'); return; }
+      toast('삭제되었습니다.');
+      location.hash = pageName;
+    };
+    $$('#regListBox button[data-regid]').forEach(btn=>{
+      btn.onclick = async ()=>{
+        const regId = btn.dataset.regid;
+        const pw = await promptPassword({title:'신청 취소', sub:'신청 시 입력한 비밀번호를 입력해주세요.'});
+        if(pw === null) return;
+        const target = regList.find(r=>r.id===regId);
+        if(!target || pw !== target.password){ toast('비밀번호가 일치하지 않습니다.'); return; }
+        const ok = await confirmDialog('참가 신청을 취소하시겠습니까?');
+        if(!ok) return;
+        const { error } = await supabase.from(regTable).delete().eq('id', regId);
+        if(error){ toast('취소에 실패했습니다.'); return; }
+        toast('신청이 취소되었습니다.');
+        detail(id);
+      };
+    });
+  }
+
+  routes[pageName] = async (param)=>{
+    if(param) await detail(param); else await list();
+  };
+}
+
+createEventBoard({
+  table:'rbc_regular_meetings', regTable:'rbc_regular_meeting_registrations', fk:'meeting_id',
+  pageName:'meetings', dateLabel:'meeting_date', allowMemberCreate:false,
+  label:{icon:'🚵', title:'정기모임', desc:'연 4회 진행되는 전체 정기 라이딩 일정입니다'}
+});
+createEventBoard({
+  table:'rbc_small_gatherings', regTable:'rbc_small_gathering_registrations', fk:'gathering_id',
+  pageName:'gatherings', dateLabel:'gathering_date', allowMemberCreate:true,
+  label:{icon:'📍', title:'소모임', desc:'매달 회원이 직접 여는 지역별 자전거 여행'}
+});
+
+/* =========================================================
+   초기 실행
+========================================================= */
+navigate();
+</script>
+</body>
+</html>
